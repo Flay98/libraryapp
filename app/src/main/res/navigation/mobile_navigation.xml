@@ -3,23 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@id/navigation_login">
 
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.libraryapp.ui.home.HomeFragment"
-        android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_catalog"
         android:name="com.example.libraryapp.ui.catalog.CatalogFragment"
-        android:label="@string/title_catalog"
-        tools:layout="@layout/fragment_catalog" />
-
+        tools:layout="@layout/fragment_catalog" >
+        <action
+            android:id="@+id/action_catalogFragment_to_bookDetailsFragment"
+            app:destination="@id/navigation_book_details" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_settings"
-        android:name="com.example.libraryapp.ui.settings.SettingsFragment"
-        android:label="@string/title_settings"
-        tools:layout="@layout/fragment_settings" />
+        android:name="com.example.libraryapp.ui.account.AccountFragment"
+        tools:layout="@layout/fragment_account" />
+
+    <fragment
+        android:id="@+id/navigation_login"
+        android:name="com.example.libraryapp.ui.login.LoginFragment"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_navigation_login_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_book_details"
+        android:name="com.example.libraryapp.ui.bookDetails.BookDetailsFragment"
+        tools:layout="@layout/fragment_book_details" >
+    </fragment>
 </navigation>

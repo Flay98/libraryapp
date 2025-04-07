@@ -1,6 +1,7 @@
 package com.example.libraryapp
 
 import android.os.Bundle
+import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -15,7 +16,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        supportActionBar?.hide()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -24,9 +25,22 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
+        navController.addOnDestinationChangedListener{ _, destination, _ ->
+            when (destination.id) {
+                R.id.navigation_login -> {
+                    // На экране входа/регистрации скрываем нижнюю панель
+                    navView.visibility = View.GONE
+                }
+                else -> {
+                    // На остальных экранах показываем
+                    navView.visibility = View.VISIBLE
+                }
+            }
+        }
+
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_catalog, R.id.navigation_settings
+                R.id.navigation_login, R.id.navigation_home, R.id.navigation_catalog, R.id.navigation_settings
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

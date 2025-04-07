@@ -4,39 +4,53 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.libraryapp.databinding.FragmentHomeBinding
+import androidx.recyclerview.widget.RecyclerView
+import com.example.libraryapp.R
+import com.example.libraryapp.data.BookAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.fragment.app.viewModels
 
 class HomeFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private lateinit var readingList: RecyclerView
+    private lateinit var wishlist: RecyclerView
+    private lateinit var readList: RecyclerView
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private val viewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+    ): View? = inflater.inflate(R.layout.fragment_home, container, false)
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        readingList = view.findViewById(R.id.readingRecyclerView1)
+        wishlist = view.findViewById(R.id.readingRecyclerView2)
+        readList = view.findViewById(R.id.readingRecyclerView3)
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+
+        readingList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        wishlist.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        readList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+        viewModel.readingBooks.observe(viewLifecycleOwner) { books ->
+            readingList.adapter = BookAdapter(books)
         }
-        return root
+
+        viewModel.wishlistBooks.observe(viewLifecycleOwner) { books ->
+            wishlist.adapter = BookAdapter(books)
+        }
+
+        viewModel.readBooks.observe(viewLifecycleOwner) { books ->
+            readList.adapter = BookAdapter(books)
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        readingList.adapter = null
+        wishlist.adapter = null
+        readList.adapter = null
     }
 }

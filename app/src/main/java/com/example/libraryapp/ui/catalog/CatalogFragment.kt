@@ -4,39 +4,53 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.libraryapp.databinding.FragmentCatalogBinding
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.libraryapp.R
+import com.example.libraryapp.data.BookAdapter
 
 class CatalogFragment : Fragment() {
 
-    private var _binding: FragmentCatalogBinding? = null
+    private val viewModel: CatalogViewModel by viewModels()
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var searchView: SearchView
+    private lateinit var bookAdapter: BookAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        val catalogViewModel =
-            ViewModelProvider(this).get(CatalogViewModel::class.java)
+    ): View = inflater.inflate(R.layout.fragment_catalog, container, false)
 
-        _binding =  FragmentCatalogBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        recyclerView = view.findViewById(R.id.catalogRecyclerView)
+        searchView = view.findViewById(R.id.searchView)
 
-        val textView: TextView = binding.textCatalog
-        catalogViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+        bookAdapter = BookAdapter(emptyList()) // пока пустой
+        recyclerView.adapter = bookAdapter
+
+        // Подписка на данные
+        viewModel.filteredBooks.observe(viewLifecycleOwner) { books ->
+            bookAdapter = BookAdapter(books)
+            recyclerView.adapter = bookAdapter
         }
-        return root
-    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        // Поиск
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = true
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                viewModel.filterBooks(newText)
+                return true
+            }
+        })
     }
 }
