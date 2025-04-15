@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.libraryapp.R
 import com.example.libraryapp.data.Book
+import com.example.libraryapp.data.BookRepository
 
 class HomeViewModel : ViewModel() {
 
@@ -23,25 +24,15 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun loadMockData() {
-        val mockBooks = listOf(
-            Book("Тихий Дэн", "Андрей Таренков", R.drawable.den),
-            Book("Цитаты Стэтхема", "Джейсон Стэтхем", R.drawable.statham),
-            Book("Так говорил Жириновский", "Владимир Жириновский", R.drawable.zhirik),
-            Book("Заводной Апельсин", "Энтони Бёрджэсс", R.drawable.apelsin)
-        )
+        val books = BookRepository.getAllBooks()
 
-        val mockBooks1 = listOf(
-            Book("Тихий Дэн", "Андрей Таренков", R.drawable.den),
-            Book("Цитаты Стэтхема", "Джейсон Стэтхем", R.drawable.statham),
-        )
+        _readingBooks.value = books.filter { it.status == "читаю" }
+        _wishlistBooks.value = books.filter { it.status == "хочу" }
+        _readBooks.value = books.filter { it.status == "прочитано" }
 
-        val mockBooks2 = listOf(
-            Book("Заводной Апельсин", "Энтони Бёрджэсс", R.drawable.apelsin)
-        )
+    }
 
-        // Заглушки, но можно и разные списки
-        _readingBooks.value = mockBooks
-        _wishlistBooks.value = mockBooks1
-        _readBooks.value = mockBooks2
+    fun refresh() {
+        loadMockData()
     }
 }

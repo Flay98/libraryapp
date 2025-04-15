@@ -3,6 +3,7 @@ package com.example.libraryapp.ui.account
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.libraryapp.data.BookRepository
 
 class AccountViewModel : ViewModel() {
 
@@ -19,10 +20,18 @@ class AccountViewModel : ViewModel() {
     private fun loadUserData() {
         // Пока что: заглушки
         _username.value = "user123"
-        _readCount.value = 12
+        //_readCount.value = BookRepository.getAllBooks()
+            //.count { it.status == "прочитано" }
+        val count = BookRepository.getAllBooks().count { it.status == "прочитано" }
+        println("🔍 Обновлённый счётчик: $count")
+        _readCount.value = count
     }
 
     fun logout() {
         // В будущем можно очистить токен, сбросить данные и т.п.
+    }
+
+    fun refresh(){
+        loadUserData()
     }
 }

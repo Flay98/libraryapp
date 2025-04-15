@@ -5,13 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.libraryapp.databinding.FragmentCatalogBinding
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.libraryapp.R
 import com.example.libraryapp.data.BookAdapter
@@ -34,12 +31,21 @@ class CatalogFragment : Fragment() {
         searchView = view.findViewById(R.id.searchView)
 
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-        bookAdapter = BookAdapter(emptyList()) // пока пустой
+        bookAdapter = BookAdapter(emptyList()) { book ->
+            val bundle = Bundle()
+            bundle.putInt("bookId", book.id)
+            findNavController().navigate(R.id.action_catalogFragment_to_bookDetailsFragment, bundle)
+        } // пока пустой
         recyclerView.adapter = bookAdapter
 
         // Подписка на данные
         viewModel.filteredBooks.observe(viewLifecycleOwner) { books ->
-            bookAdapter = BookAdapter(books)
+            bookAdapter = BookAdapter(books) { book ->
+                // например, переход на BookDetailsFragment
+                val bundle = Bundle()
+                bundle.putInt("bookId", book.id)
+                findNavController().navigate(R.id.action_catalogFragment_to_bookDetailsFragment, bundle)
+            }
             recyclerView.adapter = bookAdapter
         }
 

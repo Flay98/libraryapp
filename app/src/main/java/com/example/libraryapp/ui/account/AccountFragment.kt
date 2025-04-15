@@ -44,8 +44,8 @@ class AccountFragment : Fragment() {
             loginText.text = "Логин: $it"
         }
 
-        homeViewModel.readBooks.observe(viewLifecycleOwner) { books ->
-            readCountText.text = "Прочитано книг: ${books.size}"
+        viewModel.readCount.observe(viewLifecycleOwner) { count ->
+            readCountText.text = "Прочитано книг: $count"
         }
 
         // Смена темы
@@ -65,5 +65,10 @@ class AccountFragment : Fragment() {
             viewModel.logout()
             findNavController().navigate(R.id.navigation_login)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.refresh()
     }
 }

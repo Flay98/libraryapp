@@ -10,6 +10,7 @@ import com.example.libraryapp.R
 import com.example.libraryapp.data.BookAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 
 class HomeFragment : Fragment() {
 
@@ -35,16 +36,27 @@ class HomeFragment : Fragment() {
         readList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         viewModel.readingBooks.observe(viewLifecycleOwner) { books ->
-            readingList.adapter = BookAdapter(books)
+            readingList.adapter = BookAdapter(books) {}
         }
 
         viewModel.wishlistBooks.observe(viewLifecycleOwner) { books ->
-            wishlist.adapter = BookAdapter(books)
+            wishlist.adapter = BookAdapter(books) {
+            }
         }
 
         viewModel.readBooks.observe(viewLifecycleOwner) { books ->
-            readList.adapter = BookAdapter(books)
+            readList.adapter = BookAdapter(books) {
+            }
         }
+
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Boolean>("refreshHome")
+            ?.observe(viewLifecycleOwner) { shouldRefresh ->
+                if (shouldRefresh) {
+                    println("📘 TRIGGERED REFRESH!")
+                    viewModel.refresh()
+                }
+            }
     }
 
     override fun onDestroyView() {
@@ -53,4 +65,10 @@ class HomeFragment : Fragment() {
         wishlist.adapter = null
         readList.adapter = null
     }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.refresh()
+    }
+
 }

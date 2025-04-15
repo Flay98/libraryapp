@@ -35,5 +35,6 @@
         android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="#B9D08F"
         android:text="Выйти из аккаунта"/>
 </LinearLayout>

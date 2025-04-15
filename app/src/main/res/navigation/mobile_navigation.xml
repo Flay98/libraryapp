@@ -30,11 +30,24 @@
         <action
             android:id="@+id/action_navigation_login_to_navigation_home"
             app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_navigation_login_to_navigation_register"
+            app:destination="@id/navigation_register" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_book_details"
         android:name="com.example.libraryapp.ui.bookDetails.BookDetailsFragment"
         tools:layout="@layout/fragment_book_details" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_register"
+        android:name="com.example.libraryapp.ui.login.RegisterFragment"
+        android:label="Регистрация">
+
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/navigation_login" />
     </fragment>
 </navigation>

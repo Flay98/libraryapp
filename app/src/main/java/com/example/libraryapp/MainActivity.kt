@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         navController.addOnDestinationChangedListener{ _, destination, _ ->
             when (destination.id) {
-                R.id.navigation_login -> {
+                (R.id.navigation_login or R.id.navigation_login)-> {
                     // На экране входа/регистрации скрываем нижнюю панель
                     navView.visibility = View.GONE
                 }
@@ -38,12 +38,38 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
+
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_login, R.id.navigation_home, R.id.navigation_catalog, R.id.navigation_settings
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+        //navView.setupWithNavController(navController)
+        binding.navView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    if (!navController.popBackStack(R.id.navigation_home, false)) {
+                        navController.navigate(R.id.navigation_home)
+                    }
+                    true
+                }
+                R.id.navigation_catalog -> {
+                    if (!navController.popBackStack(R.id.navigation_catalog, false)) {
+                        navController.navigate(R.id.navigation_catalog)
+                    }
+                    true
+                }
+                R.id.navigation_settings -> {
+                    if (!navController.popBackStack(R.id.navigation_settings, false)) {
+                        navController.navigate(R.id.navigation_settings)
+                    }
+                    true
+                }
+                else -> false
+            }
+        }
+
     }
 }

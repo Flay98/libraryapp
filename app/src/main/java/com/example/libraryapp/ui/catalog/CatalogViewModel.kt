@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.libraryapp.R
 import com.example.libraryapp.data.Book
+import com.example.libraryapp.data.BookRepository
 
 class CatalogViewModel : ViewModel() {
 
@@ -21,17 +22,7 @@ class CatalogViewModel : ViewModel() {
     }
 
     private fun loadMockBooks() {
-        val books = listOf(
-            Book("Тихий Дэн", "Андрей Таренков", R.drawable.den),
-            Book("Заводной Апельсин", "Энтони Бёрджесс", R.drawable.apelsin),
-            Book("Пацанские цитаты", "Джейсон Стэтхэм", R.drawable.statham),
-            Book("Так говорил Жириновский", "Владимир Жириновский", R.drawable.zhirik),
-            Book("Это я, Эдичка", "Эдуард Лимонов", R.drawable.eto_ya),
-            Book("Муму", "Иван Тургенев", R.drawable.mymy),
-            Book("Братья Карамазовы", "Федор Достоевский", R.drawable.karamozovy),
-            Book("Анна Каренина", "Лев Толстой", R.drawable.karenina),
-            Book("Мы", "Евгений Замятин", R.drawable.mbl)
-        )
+        val books = BookRepository.getAllBooks()
         _allBooks.value = books
         _filteredBooks.value = books
     }

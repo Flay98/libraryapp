@@ -29,11 +29,18 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val loginButton = view.findViewById<Button>(R.id.button_reg)
+        val loginButton = view.findViewById<Button>(R.id.btn_login)
 
         loginButton.setOnClickListener {
             // Переход на главный экран
             findNavController().navigate(R.id.action_navigation_login_to_navigation_home)
+        }
+
+        val registerButton = view.findViewById<Button>(R.id.btnRegister)
+
+        registerButton.setOnClickListener {
+            // Переход на главный экран
+            findNavController().navigate(R.id.action_navigation_login_to_navigation_register)
         }
     }
 
