@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.libraryapp.R
 
 class BookAdapter(private val books: List<Book>,
@@ -28,8 +29,11 @@ class BookAdapter(private val books: List<Book>,
         val book = books[position]
         holder.title.text = book.title
         holder.author.text = book.author
-        holder.cover.setImageResource(book.image)
-
+        //holder.cover.setImageResource(book.image)
+        Glide.with(holder.cover.context)
+            .load(book.imageURL)
+            // необязательно: картинка, если ошибка
+            .into(holder.cover)
         holder.itemView.setOnClickListener {
             onBookClick(book)
         }

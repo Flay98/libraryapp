@@ -33,7 +33,7 @@ class CatalogFragment : Fragment() {
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         bookAdapter = BookAdapter(emptyList()) { book ->
             val bundle = Bundle()
-            bundle.putInt("bookId", book.id)
+            bundle.putString("bookId", book.id)
             findNavController().navigate(R.id.action_catalogFragment_to_bookDetailsFragment, bundle)
         } // пока пустой
         recyclerView.adapter = bookAdapter
@@ -43,7 +43,7 @@ class CatalogFragment : Fragment() {
             bookAdapter = BookAdapter(books) { book ->
                 // например, переход на BookDetailsFragment
                 val bundle = Bundle()
-                bundle.putInt("bookId", book.id)
+                bundle.putString("bookId", book.id)
                 findNavController().navigate(R.id.action_catalogFragment_to_bookDetailsFragment, bundle)
             }
             recyclerView.adapter = bookAdapter

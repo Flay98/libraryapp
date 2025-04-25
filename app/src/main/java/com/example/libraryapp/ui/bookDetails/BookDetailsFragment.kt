@@ -6,12 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import com.example.libraryapp.R
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 
 class BookDetailsFragment : Fragment() {
 
@@ -35,15 +38,24 @@ class BookDetailsFragment : Fragment() {
         descriptionText = view.findViewById(R.id.bookDescription)
         coverImage = view.findViewById(R.id.bookCover)
 
+        val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
+        val contentContainer = view.findViewById<LinearLayout>(R.id.bookContentContainer)
 
-        val bookId = arguments?.getInt("bookId") ?: return
+        progressBar.visibility = View.VISIBLE
+        contentContainer.visibility = View.GONE
+
+        val bookId = arguments?.getString("bookId") ?: return
         viewModel.loadBook(bookId)
 
         viewModel.book.observe(viewLifecycleOwner) { book ->
             titleText.text = "Выбранная книга: ${book.title}"
             authorText.text = book.author
             descriptionText.text = book.description
-            coverImage.setImageResource(book.image)
+            Glide.with(requireContext())
+                .load(book.imageURL)
+                .into(coverImage)
+            progressBar.visibility = View.GONE
+            contentContainer.visibility = View.VISIBLE
         }
 
         val btnReading = view.findViewById<Button>(R.id.btnNowReading)

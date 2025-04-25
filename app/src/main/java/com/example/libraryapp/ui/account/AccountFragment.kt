@@ -40,8 +40,8 @@ class AccountFragment : Fragment() {
         logoutButton = view.findViewById(R.id.logoutButton)
 
         // Подписка на ViewModel
-        viewModel.username.observe(viewLifecycleOwner) {
-            loginText.text = "Логин: $it"
+        viewModel.username.observe(viewLifecycleOwner) { login ->
+            loginText.text = "Логин: $login"
         }
 
         viewModel.readCount.observe(viewLifecycleOwner) { count ->

@@ -9,6 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.libraryapp.databinding.ActivityMainBinding
+import com.google.firebase.FirebaseApp
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,6 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
         supportActionBar?.hide()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

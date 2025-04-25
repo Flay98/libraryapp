@@ -8,6 +8,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large" />
+
         <TextView
             android:id="@+id/titleText"
             android:layout_width="match_parent"
@@ -19,6 +27,7 @@
             android:layout_marginBottom="16dp" />
 
         <LinearLayout
+            android:id="@+id/bookContentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"

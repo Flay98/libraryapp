@@ -27,8 +27,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Название"
-            android:textStyle="bold"
-            android:textSize="14sp" />
+            android:textAlignment="center"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/bookAuthor"
