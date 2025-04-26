@@ -29,10 +29,8 @@ class BookAdapter(private val books: List<Book>,
         val book = books[position]
         holder.title.text = book.title
         holder.author.text = book.author
-        //holder.cover.setImageResource(book.image)
         Glide.with(holder.cover.context)
             .load(book.imageURL)
-            // необязательно: картинка, если ошибка
             .into(holder.cover)
         holder.itemView.setOnClickListener {
             onBookClick(book)

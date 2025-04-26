@@ -1,6 +1,5 @@
 package com.example.libraryapp.ui.account
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,13 +9,9 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.libraryapp.R
-import com.example.libraryapp.databinding.FragmentAccountBinding
 import androidx.fragment.app.viewModels
-import com.example.libraryapp.ui.home.HomeViewModel
 
 class AccountFragment : Fragment() {
 
@@ -26,7 +21,6 @@ class AccountFragment : Fragment() {
     private lateinit var readCountText: TextView
     private lateinit var themeSwitch: Switch
     private lateinit var logoutButton: Button
-    private val homeViewModel: HomeViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +33,6 @@ class AccountFragment : Fragment() {
         themeSwitch = view.findViewById(R.id.themeSwitch)
         logoutButton = view.findViewById(R.id.logoutButton)
 
-        // Подписка на ViewModel
         viewModel.username.observe(viewLifecycleOwner) { login ->
             loginText.text = "Логин: $login"
         }
@@ -47,18 +40,20 @@ class AccountFragment : Fragment() {
         viewModel.readCount.observe(viewLifecycleOwner) { count ->
             readCountText.text = "Прочитано книг: $count"
         }
+        viewModel.loadUserTheme()
 
-        // Смена темы
-        val prefs = requireContext().getSharedPreferences("settings", Context.MODE_PRIVATE)
-        val isDark = prefs.getBoolean("dark_theme", false)
-        themeSwitch.isChecked = isDark
+        viewModel.isDarkTheme.observe(viewLifecycleOwner) { isDark ->
+            themeSwitch.isChecked = isDark
+        }
 
-        themeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            prefs.edit().putBoolean("dark_theme", isChecked).apply()
-            AppCompatDelegate.setDefaultNightMode(
-                if (isChecked) AppCompatDelegate.MODE_NIGHT_YES
-                else AppCompatDelegate.MODE_NIGHT_NO
-            )
+        themeSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (buttonView.isPressed) {
+                viewModel.updateUserTheme(isChecked)
+                AppCompatDelegate.setDefaultNightMode(
+                    if (isChecked) AppCompatDelegate.MODE_NIGHT_YES
+                    else AppCompatDelegate.MODE_NIGHT_NO
+                )
+            }
         }
 
         logoutButton.setOnClickListener {

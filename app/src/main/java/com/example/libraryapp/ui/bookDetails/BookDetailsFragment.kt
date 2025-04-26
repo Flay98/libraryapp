@@ -1,5 +1,6 @@
 package com.example.libraryapp.ui.bookDetails
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.example.libraryapp.data.Book
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class BookDetailsFragment : Fragment() {
 
@@ -30,6 +34,7 @@ class BookDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View = inflater.inflate(R.layout.fragment_book_details, container, false)
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -61,10 +66,11 @@ class BookDetailsFragment : Fragment() {
         val btnReading = view.findViewById<Button>(R.id.btnNowReading)
 
         btnReading.setOnClickListener {
-            viewModel.updateBookStatus("читаю")
+            viewModel.book.value?.let { book ->
+                addBookToUserList(book, "читаю")
+            }
             Toast.makeText(requireContext(), "Добавлено в \"Сейчас читаю\"", Toast.LENGTH_SHORT).show()
 
-            // Сообщаем HomeFragment, чтобы он обновил список
             findNavController().previousBackStackEntry
                 ?.savedStateHandle
                 ?.set("refreshHome", true)
@@ -73,7 +79,9 @@ class BookDetailsFragment : Fragment() {
         val btnWishlist = view.findViewById<Button>(R.id.btnWishlist)
 
         btnWishlist.setOnClickListener {
-            viewModel.updateBookStatus("хочу")
+            viewModel.book.value?.let { book ->
+                addBookToUserList(book, "хочу")
+            }
             Toast.makeText(requireContext(), "Добавлено в \"Хочу прочитать\"", Toast.LENGTH_SHORT).show()
 
             val navController = findNavController()
@@ -83,10 +91,11 @@ class BookDetailsFragment : Fragment() {
         val btnRead = view.findViewById<Button>(R.id.btnRead)
 
         btnRead.setOnClickListener {
-            viewModel.updateBookStatus("прочитано")
+            viewModel.book.value?.let { book ->
+                addBookToUserList(book, "прочитано")
+            }
             Toast.makeText(requireContext(), "Добавлено в \"Прочитано\"", Toast.LENGTH_SHORT).show()
 
-            // Сообщаем HomeFragment, чтобы он обновил список
             findNavController().previousBackStackEntry
                 ?.savedStateHandle
                 ?.set("refreshHome", true)
@@ -98,5 +107,37 @@ class BookDetailsFragment : Fragment() {
             findNavController().popBackStack()
         }
     }
+
+    private fun addBookToUserList(book: Book, status: String) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        if (uid == null) {
+            Toast.makeText(requireContext(), "Ошибка: пользователь не авторизован", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val userBooksRef = FirebaseFirestore.getInstance()
+            .collection("users")
+            .document(uid)
+            .collection("books")
+
+        val bookData = mapOf(
+            "id" to book.id,
+            "title" to book.title,
+            "author" to book.author,
+            "imageURL" to book.imageURL,
+            "description" to book.description,
+            "status" to status
+        )
+
+        userBooksRef.document(book.id).set(bookData)
+            .addOnSuccessListener {
+                Toast.makeText(requireContext(), "Книга добавлена в раздел \"$status\"", Toast.LENGTH_SHORT).show()
+                findNavController().popBackStack()
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Ошибка добавления книги: ${it.message}", Toast.LENGTH_LONG).show()
+            }
+    }
+
 }
 

@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.libraryapp.data.Book
-import com.example.libraryapp.data.BookRepository
 import com.google.firebase.firestore.FirebaseFirestore
 
 class BookDetailsView : ViewModel() {
@@ -28,17 +27,4 @@ class BookDetailsView : ViewModel() {
             }
     }
 
-    fun updateBookStatus(status: String) {
-        val book = _book.value ?: return
-        val bookId = book.id
-
-        db.collection("books").document(bookId)
-            .update("status", status)
-            .addOnSuccessListener {
-                _book.value = book.copy(status = status)
-            }
-            .addOnFailureListener {
-                Log.e("BookDetailsViewModel", "Ошибка обновления статуса", it)
-            }
-    }
 }

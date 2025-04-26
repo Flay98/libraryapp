@@ -1,6 +1,7 @@
 package com.example.libraryapp.data
 
 import android.annotation.SuppressLint
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -10,12 +11,14 @@ object FirebaseBookRepository {
 
     fun getBooks(callback: (List<Book>) -> Unit) {
         db.collection("books").get()
-            .addOnSuccessListener { result ->
-                val books = result.mapNotNull { it.toObject(Book::class.java) }
+            .addOnSuccessListener { snapshot ->
+                val books = snapshot.documents.mapNotNull { doc ->
+                    val book = doc.toObject(Book::class.java)
+                    book?.copy(id = doc.id)}
                 callback(books)
             }
             .addOnFailureListener {
-                callback(emptyList())
+                Log.e("CatalogViewModel", "Ошибка загрузки книг: ${it.message}")
             }
     }
 }

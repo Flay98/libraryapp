@@ -1,26 +1,24 @@
 package com.example.libraryapp.ui.login
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.navigation.fragment.findNavController
-import com.example.libraryapp.MainActivity
 import com.example.libraryapp.R
-import com.example.libraryapp.databinding.FragmentHomeBinding
-import com.example.libraryapp.databinding.FragmentLoginBinding
-import com.example.libraryapp.ui.home.HomeViewModel
+import androidx.fragment.app.viewModels
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginFragment : Fragment() {
+
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,35 +35,53 @@ class LoginFragment : Fragment() {
         val loginButton = view.findViewById<Button>(R.id.btn_login)
 
         loginButton.setOnClickListener {
-            // Переход на главный экран
-            //findNavController().navigate(R.id.action_navigation_login_to_navigation_home)
             val email = emailInput.text.toString()
             val password = passwordInput.text.toString()
 
             if (email.isNotBlank() && password.isNotBlank()) {
-                FirebaseAuth.getInstance()
-                    .signInWithEmailAndPassword(email, password)
-                    .addOnSuccessListener {
+                viewModel.login(email, password,
+                    onSuccess = {
                         Toast.makeText(context, "Вход выполнен", Toast.LENGTH_SHORT).show()
-                        findNavController().navigate(R.id.action_navigation_login_to_navigation_home) // или home
+                        val userId = FirebaseAuth.getInstance().currentUser?.uid
+                        if (userId != null) {
+                            FirebaseFirestore.getInstance()
+                                .collection("users")
+                                .document(userId)
+                                .get()
+                                .addOnSuccessListener { snapshot ->
+                                    val isDarkTheme = snapshot.getBoolean("darkThemeEnabled") ?: false
+                                    AppCompatDelegate.setDefaultNightMode(
+                                        if (isDarkTheme) AppCompatDelegate.MODE_NIGHT_YES
+                                        else AppCompatDelegate.MODE_NIGHT_NO
+                                    )
+                                    findNavController().navigate(R.id.action_navigation_login_to_navigation_home)
+                                    requireActivity().findViewById<BottomNavigationView>(R.id.nav_view).selectedItemId = R.id.navigation_home
+                                }
+                                .addOnFailureListener {
+                                    Toast.makeText(context, "Ошибка входа: ${it.message}", Toast.LENGTH_LONG).show()
+                                }
+                        } else {
+                            findNavController().navigate(R.id.action_navigation_login_to_navigation_home)
+                            requireActivity().findViewById<BottomNavigationView>(R.id.nav_view).selectedItemId = R.id.navigation_home
+                        }
+
+                    },
+                    onFailure = { errorMessage ->
+                        Toast.makeText(context, "Ошибка: $errorMessage", Toast.LENGTH_LONG).show()
                     }
-                    .addOnFailureListener {
-                        Toast.makeText(context, "Ошибка входа: ${it.message}", Toast.LENGTH_LONG).show()
-                    }
+                )
             }
         }
 
         val registerButton = view.findViewById<Button>(R.id.btnRegister)
 
         registerButton.setOnClickListener {
-            // Переход на главный экран
             findNavController().navigate(R.id.action_navigation_login_to_navigation_register)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-            //_binding = null
     }
 
 }

@@ -35,13 +35,11 @@ class CatalogFragment : Fragment() {
             val bundle = Bundle()
             bundle.putString("bookId", book.id)
             findNavController().navigate(R.id.action_catalogFragment_to_bookDetailsFragment, bundle)
-        } // пока пустой
+        }
         recyclerView.adapter = bookAdapter
 
-        // Подписка на данные
         viewModel.filteredBooks.observe(viewLifecycleOwner) { books ->
             bookAdapter = BookAdapter(books) { book ->
-                // например, переход на BookDetailsFragment
                 val bundle = Bundle()
                 bundle.putString("bookId", book.id)
                 findNavController().navigate(R.id.action_catalogFragment_to_bookDetailsFragment, bundle)
@@ -49,7 +47,6 @@ class CatalogFragment : Fragment() {
             recyclerView.adapter = bookAdapter
         }
 
-        // Поиск
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = true
 

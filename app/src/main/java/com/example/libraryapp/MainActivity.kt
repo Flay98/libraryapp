@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.example.libraryapp.databinding.ActivityMainBinding
 import com.google.firebase.FirebaseApp
 
@@ -25,11 +24,11 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
         navController.addOnDestinationChangedListener{ _, destination, _ ->
             when (destination.id) {
-                (R.id.navigation_login or R.id.navigation_login)-> {
+                R.id.navigation_login,
+                R.id.navigation_register-> {
                     // На экране входа/регистрации скрываем нижнюю панель
                     navView.visibility = View.GONE
                 }
@@ -48,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-        //navView.setupWithNavController(navController)
+
         binding.navView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {

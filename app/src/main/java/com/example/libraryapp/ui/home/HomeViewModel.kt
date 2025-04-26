@@ -1,15 +1,15 @@
 package com.example.libraryapp.ui.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.libraryapp.R
 import com.example.libraryapp.data.Book
-import com.example.libraryapp.data.BookRepository
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class HomeViewModel : ViewModel() {
 
-    // LiveData для каждого раздела
     private val _readingBooks = MutableLiveData<List<Book>>()
     val readingBooks: LiveData<List<Book>> get() = _readingBooks
 
@@ -20,19 +20,30 @@ class HomeViewModel : ViewModel() {
     val readBooks: LiveData<List<Book>> get() = _readBooks
 
     init {
-        loadMockData()
+        loadUserBooks()
     }
 
-    private fun loadMockData() {
-        val books = BookRepository.getAllBooks()
+    private fun loadUserBooks() {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
-        _readingBooks.value = books.filter { it.status == "читаю" }
-        _wishlistBooks.value = books.filter { it.status == "хочу" }
-        _readBooks.value = books.filter { it.status == "прочитано" }
+        FirebaseFirestore.getInstance()
+            .collection("users")
+            .document(uid)
+            .collection("books")
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val books = snapshot.documents.mapNotNull { it.toObject(Book::class.java) }
 
+                _readingBooks.value = books.filter { it.status == "читаю" }
+                _wishlistBooks.value = books.filter { it.status == "хочу" }
+                _readBooks.value = books.filter { it.status == "прочитано" }
+            }
+            .addOnFailureListener {
+                Log.e("HomeViewModel", "Ошибка загрузки книг: ${it.message}")
+            }
     }
 
     fun refresh() {
-        loadMockData()
+        loadUserBooks()
     }
 }
