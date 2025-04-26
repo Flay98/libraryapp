@@ -21,7 +21,11 @@
     <fragment
         android:id="@+id/navigation_settings"
         android:name="com.example.libraryapp.ui.account.AccountFragment"
-        tools:layout="@layout/fragment_account" />
+        tools:layout="@layout/fragment_account" >
+        <action
+            android:id="@+id/action_navigation_settings_to_navigation_login"
+            app:destination="@id/navigation_login" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_login"

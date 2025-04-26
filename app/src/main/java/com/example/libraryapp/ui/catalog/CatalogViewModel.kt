@@ -3,8 +3,8 @@ package com.example.libraryapp.ui.catalog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.libraryapp.data.Book
-import com.example.libraryapp.data.FirebaseBookRepository
+import com.example.libraryapp.data.model.Book
+import com.example.libraryapp.data.repository.FirebaseBookRepository
 
 class CatalogViewModel : ViewModel() {
 

@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.example.libraryapp.data.Book
+import com.example.libraryapp.data.model.Book
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -26,7 +26,7 @@ class BookDetailsFragment : Fragment() {
     private lateinit var authorText: TextView
     private lateinit var descriptionText: TextView
     private lateinit var coverImage: ImageView
-    private val viewModel: BookDetailsView by viewModels()
+    private val viewModel: BookDetailsViewModel by viewModels()
 
 
     override fun onCreateView(

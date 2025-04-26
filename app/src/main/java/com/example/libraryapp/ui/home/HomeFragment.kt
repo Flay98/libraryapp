@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.libraryapp.R
-import com.example.libraryapp.data.BookAdapter
+import com.example.libraryapp.data.adapter.BookAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController

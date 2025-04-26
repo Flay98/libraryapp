@@ -4,10 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.libraryapp.data.Book
+import com.example.libraryapp.data.model.Book
 import com.google.firebase.firestore.FirebaseFirestore
 
-class BookDetailsView : ViewModel() {
+class BookDetailsViewModel : ViewModel() {
 
     private val _book = MutableLiveData<Book>()
     val book: LiveData<Book> get() = _book

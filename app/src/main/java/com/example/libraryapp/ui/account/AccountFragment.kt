@@ -58,7 +58,8 @@ class AccountFragment : Fragment() {
 
         logoutButton.setOnClickListener {
             viewModel.logout()
-            findNavController().navigate(R.id.navigation_login)
+            //findNavController().navigate(R.id.navigation_login)
+            findNavController().navigate(R.id.action_navigation_settings_to_navigation_login)
         }
     }
 

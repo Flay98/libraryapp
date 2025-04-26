@@ -29,11 +29,9 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.navigation_login,
                 R.id.navigation_register-> {
-                    // На экране входа/регистрации скрываем нижнюю панель
                     navView.visibility = View.GONE
                 }
                 else -> {
-                    // На остальных экранах показываем
                     navView.visibility = View.VISIBLE
                 }
             }

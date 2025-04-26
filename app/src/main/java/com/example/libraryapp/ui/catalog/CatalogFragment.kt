@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.libraryapp.R
-import com.example.libraryapp.data.BookAdapter
+import com.example.libraryapp.data.adapter.BookAdapter
 
 class CatalogFragment : Fragment() {
 

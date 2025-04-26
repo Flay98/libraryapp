@@ -1,9 +1,9 @@
-package com.example.libraryapp.data
+package com.example.libraryapp.data.repository
 
 import android.annotation.SuppressLint
 import android.util.Log
+import com.example.libraryapp.data.model.Book
 import com.google.firebase.firestore.FirebaseFirestore
-
 
 object FirebaseBookRepository {
     @SuppressLint("StaticFieldLeak")
